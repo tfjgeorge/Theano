@@ -2257,7 +2257,7 @@ err%(name)s = cudnnSoftmaxForward(
     def grad(self, inp, grads):
         x, = inp
         g_sm, = grads
-        sm = self.make_node(x).outputs[0]
+        sm = self(x)
         return [GpuDnnSoftmaxGrad(
             self.tensor_format,
             self.algo,
@@ -2612,7 +2612,7 @@ err%(name)s = cudnnBatchNormalizationForwardTraining(
     def grad(self, inputs, grads):
         x, scale, bias = inputs
         dy = grads[0]
-        _, x_mean, x_invstd = self.make_node(x, scale, bias).outputs
+        _, x_mean, x_invstd = self(x, scale, bias)
         return GpuDnnBatchNormGrad(self.mode, self.epsilon)(x, dy, scale,
                                                             x_mean, x_invstd)
 
